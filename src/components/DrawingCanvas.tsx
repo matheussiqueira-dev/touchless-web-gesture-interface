@@ -72,6 +72,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ gestureState, curs
   }, [redrawCanvas]);
 
   // Handle drawing with pinch gesture
+  // Note: setState in effect is intentional - synchronizing with external gesture state from hand tracking
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const screenX = cursorPosition.smoothX * window.innerWidth;

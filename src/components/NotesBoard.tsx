@@ -87,6 +87,7 @@ export const NotesBoard: React.FC<NotesBoardProps> = ({ gestureState, cursorPosi
   }, [gestureState, cursorPosition, draggedNote, createNote]);
 
   // Handle note dragging with fist gesture
+  // Note: setState in effect is intentional - synchronizing with external gesture state from hand tracking
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (gestureState.type === 'fist' && gestureState.isStable && !draggedNote) {

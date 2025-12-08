@@ -78,6 +78,7 @@ export const useGestureEngine = (handData: HandTrackingResult | null) => {
   }, []);
 
   // Process hand data and detect gestures
+  // Note: setState in effect is intentional here - we're synchronizing with external camera/hand tracking state
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!handData || !handData.landmarks || handData.landmarks.length < 21) {
