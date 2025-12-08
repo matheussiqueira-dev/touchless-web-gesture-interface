@@ -1,89 +1,89 @@
 # Touchless Web Gesture Interface
 
-## Overview
+## Visão Geral
 
-Touchless Web Gesture Interface is a web application that enables users to interact with digital elements using hand gestures captured via a standard webcam. By leveraging computer vision technology, specifically MediaPipe Hands, the application tracks hand landmarks in real-time to control a virtual cursor, perform click actions, drag elements, and draw on a virtual canvas without any physical contact with input devices.
+Touchless Web Gesture Interface é uma aplicação web que permite aos usuários interagir com elementos digitais utilizando gestos manuais capturados através de uma webcam padrão. Aproveitando a tecnologia de visão computacional, especificamente o MediaPipe Hands, a aplicação rastreia pontos de referência da mão em tempo real para controlar um cursor virtual, realizar ações de clique, arrastar elementos e desenhar em uma tela virtual sem qualquer contato físico com dispositivos de entrada.
 
-## Features
+## Funcionalidades
 
-- **Real-time Hand Tracking**: Utilizes MediaPipe for high-performance hand detection and landmark tracking directly in the browser.
-- **Virtual Cursor**: Maps the user's index finger position to a screen cursor with smoothing for precision.
-- **Gesture Recognition**:
-    - **Pinch Interaction**: Detects thumb and index finger pinch to simulate mouse clicks and drag operations.
-    - **Fist Detection**: Identifies a closed fist gesture, used for state changes or tool toggling.
-- **Interactive Board**:
-    - **Sticky Notes**: Users can grab and move virtual sticky notes using the pinch gesture.
-    - **Drawing Canvas**: Freehand drawing capabilities activated by gestures.
-- **Modern Architecture**: Built with React, TypeScript, and Vite for performance and maintainability.
+- **Rastreamento de Mão em Tempo Real**: Utiliza o MediaPipe para detecção de mãos e rastreamento de pontos de referência de alta performance diretamente no navegador.
+- **Cursor Virtual**: Mapeia a posição do dedo indicador do usuário para um cursor na tela com suavização para precisão.
+- **Reconhecimento de Gestos**:
+    - **Interação de Pinça**: Detecta o movimento de pinça entre o polegar e o dedo indicador para simular cliques e operações de arrastar.
+    - **Detecção de Punho**: Identifica o gesto de punho fechado, utilizado para mudanças de estado ou alternância de ferramentas.
+- **Quadro Interativo**:
+    - **Notas Adesivas**: Usuários podem pegar e mover notas adesivas virtuais usando o gesto de pinça.
+    - **Tela de Desenho**: Capacidades de desenho livre ativadas por gestos.
+- **Arquitetura Moderna**: Construído com React, TypeScript e Vite para performance e manutenibilidade.
 
-## Technology Stack
+## Stack Tecnológico
 
-- **Frontend Framework**: React 18
-- **Language**: TypeScript
-- **Build Tool**: Vite
-- **Computer Vision**: Google MediaPipe Tasks Vision
-- **Styling**: CSS Modules / Custom CSS Variables (Glassmorphism design system)
+- **Framework Frontend**: React 18
+- **Linguagem**: TypeScript
+- **Ferramenta de Build**: Vite
+- **Visão Computacional**: Google MediaPipe Tasks Vision
+- **Estilização**: CSS Modules / Variáveis CSS Customizadas (Sistema de design Glassmorphism)
 
-## Prerequisites
+## Pré-requisitos
 
-- Node.js (Version 16 or higher recommended)
-- TPM/NPM package manager
-- A computer with a functional webcam
+- Node.js (Versão 16 ou superior recomendada)
+- Gerenciador de pacotes NPM/TPM
+- Um computador com uma webcam funcional
 
-## Installation
+## Instalação
 
-1. Clone the repository:
+1. Clone o repositório:
    ```bash
    git clone https://github.com/matheussiqueirahub/touchless-web-gesture-interface.git
    ```
 
-2. Navigate to the project directory:
+2. Navegue até o diretório do projeto:
    ```bash
    cd touchless-web-gesture-interface
    ```
 
-3. Install dependencies:
+3. Instale as dependências:
    ```bash
    npm install
    ```
 
-## Usage
+## Uso
 
-1. Start the development server:
+1. Inicie o servidor de desenvolvimento:
    ```bash
    npm run dev
    ```
 
-2. Open your browser and navigate to the local URL provided (usually `http://localhost:5173`).
+2. Abra seu navegador e navegue para a URL local fornecida (geralmente `http://localhost:5173`).
 
-3. Grant camera permissions when prompted by the browser.
+3. Conceda permissões de câmera quando solicitado pelo navegador.
 
-4. **Interaction Guide**:
-    - **Move Cursor**: Move your hand in front of the camera. The cursor follows your index finger.
-    - **Click / Drag**: Pinch your thumb and index finger together.
-    - **Draw**: Pinch and move your hand while in an empty area.
-    - **Stop Drawing**: Opening your hand (releasing the pinch) or forming a fist stops the drawing action.
+4. **Guia de Interação**:
+    - **Mover Cursor**: Mova sua mão na frente da câmera. O cursor segue seu dedo indicador.
+    - **Clicar / Arrastar**: Faça o movimento de pinça (junte polegar e indicador).
+    - **Desenhar**: Faça o movimento de pinça e mova a mão em uma área vazia.
+    - **Parar de Desenhar**: Abra a mão (solte a pinça) ou feche o punho para parar a ação.
 
-## Project Structure
+## Estrutura do Projeto
 
 ```
 src/
-├── components/         # React components (VideoFeed, CanvasOverlay, NotesBoard)
-├── context/           # Global state management
-├── hooks/             # Custom hooks (useHandTracking, useGestureEngine)
-├── utils/             # Helper functions (geometry, gesture logic)
-├── App.tsx            # Main application component
-└── main.tsx           # Entry point
+├── components/         # Componentes React (VideoFeed, CanvasOverlay, NotesBoard)
+├── context/           # Gerenciamento de estado global
+├── hooks/             # Hooks customizados (useHandTracking, useGestureEngine)
+├── utils/             # Funções auxiliares (geometria, lógica de gestos)
+├── App.tsx            # Componente principal da aplicação
+└── main.tsx           # Ponto de entrada
 ```
 
-## Contributing
+## Contribuição
 
-1. Fork the project.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+1. Faça um Fork do projeto.
+2. Crie sua branch de funcionalidade (`git checkout -b feature/FuncionalidadeIncrivel`).
+3. Comite suas mudanças (`git commit -m 'Adiciona alguma FuncionalidadeIncrivel'`).
+4. Dê um Push para a branch (`git push origin feature/FuncionalidadeIncrivel`).
+5. Abra um Pull Request.
 
-## License
+## Licença
 
-This project is distributed under the MIT License. See `LICENSE` for more information.
+Este projeto é distribuído sob a Licença MIT. Veja `LICENSE` para mais informações.
