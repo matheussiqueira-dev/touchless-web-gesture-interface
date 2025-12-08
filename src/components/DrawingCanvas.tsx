@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import type { GestureState, CursorPosition, DrawingStroke } from '../types';
 
 interface DrawingCanvasProps {
@@ -12,6 +12,46 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ gestureState, curs
   const [currentStroke, setCurrentStroke] = useState<DrawingStroke | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const previousGestureRef = useRef<string>('none');
+
+  const drawStroke = useCallback((ctx: CanvasRenderingContext2D, stroke: DrawingStroke) => {
+    if (stroke.points.length < 2) return;
+
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.width;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+
+    for (let i = 1; i < stroke.points.length; i++) {
+      ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+    }
+
+    ctx.stroke();
+  }, []);
+
+  // Redraw canvas
+  const redrawCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw all completed strokes
+    strokes.forEach(stroke => {
+      drawStroke(ctx, stroke);
+    });
+
+    // Draw current stroke
+    if (currentStroke) {
+      drawStroke(ctx, currentStroke);
+    }
+  }, [strokes, currentStroke, drawStroke]);
 
   // Initialize canvas
   useEffect(() => {
@@ -29,9 +69,10 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ gestureState, curs
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [redrawCanvas]);
 
   // Handle drawing with pinch gesture
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const screenX = cursorPosition.smoothX * window.innerWidth;
     const screenY = cursorPosition.smoothY * window.innerHeight;
@@ -63,51 +104,12 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ gestureState, curs
 
     previousGestureRef.current = gestureState.type;
   }, [gestureState, cursorPosition, isDrawing, currentStroke]);
-
-  // Redraw canvas
-  const redrawCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw all completed strokes
-    strokes.forEach(stroke => {
-      drawStroke(ctx, stroke);
-    });
-
-    // Draw current stroke
-    if (currentStroke) {
-      drawStroke(ctx, currentStroke);
-    }
-  };
-
-  const drawStroke = (ctx: CanvasRenderingContext2D, stroke: DrawingStroke) => {
-    if (stroke.points.length < 2) return;
-
-    ctx.strokeStyle = stroke.color;
-    ctx.lineWidth = stroke.width;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    ctx.beginPath();
-    ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
-
-    for (let i = 1; i < stroke.points.length; i++) {
-      ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
-    }
-
-    ctx.stroke();
-  };
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Redraw on strokes or currentStroke change
   useEffect(() => {
     redrawCanvas();
-  }, [strokes, currentStroke]);
+  }, [strokes, currentStroke, redrawCanvas]);
 
   const clearCanvas = () => {
     setStrokes([]);

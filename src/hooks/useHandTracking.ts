@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { HandLandmarker, FilesetResolver, HandLandmarkerResult } from '@mediapipe/tasks-vision';
+import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
+import type { HandLandmarkerResult } from '@mediapipe/tasks-vision';
 import type { HandTrackingResult } from '../types';
 
 export const useHandTracking = () => {
@@ -70,7 +71,7 @@ export const useHandTracking = () => {
   }, []);
 
   // Process video frame
-  const processFrame = useCallback(() => {
+  const processFrame = useCallback(function frame() {
     if (!handLandmarkerRef.current || !videoRef.current || !isReady) {
       return;
     }
@@ -110,7 +111,7 @@ export const useHandTracking = () => {
     }
 
     // Continue processing
-    animationFrameRef.current = requestAnimationFrame(processFrame);
+    animationFrameRef.current = requestAnimationFrame(frame);
   }, [isReady]);
 
   // Start tracking

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import type { HandTrackingResult, GestureState, GestureType, CursorPosition } from '../types';
+import type { HandTrackingResult, GestureState, GestureType, CursorPosition, HandLandmark } from '../types';
 
 const PINCH_THRESHOLD = 0.05;
 const FIST_THRESHOLD = 0.15;
@@ -33,7 +33,7 @@ export const useGestureEngine = (handData: HandTrackingResult | null) => {
   }, []);
 
   // Detect pinch gesture (thumb tip and index finger tip close together)
-  const detectPinch = useCallback((landmarks: any[]) => {
+  const detectPinch = useCallback((landmarks: HandLandmark[]) => {
     const thumbTip = landmarks[4];
     const indexTip = landmarks[8];
     const distance = calculateDistance(thumbTip, indexTip);
@@ -41,7 +41,7 @@ export const useGestureEngine = (handData: HandTrackingResult | null) => {
   }, [calculateDistance]);
 
   // Detect fist gesture (all fingertips close to palm)
-  const detectFist = useCallback((landmarks: any[]) => {
+  const detectFist = useCallback((landmarks: HandLandmark[]) => {
     const palmBase = landmarks[0];
     const fingerTips = [landmarks[4], landmarks[8], landmarks[12], landmarks[16], landmarks[20]];
     
@@ -78,6 +78,7 @@ export const useGestureEngine = (handData: HandTrackingResult | null) => {
   }, []);
 
   // Process hand data and detect gestures
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!handData || !handData.landmarks || handData.landmarks.length < 21) {
       setGestureState({
@@ -133,6 +134,7 @@ export const useGestureEngine = (handData: HandTrackingResult | null) => {
       }
     }
   }, [handData, cursorPosition, detectPinch, detectFist, smoothPosition, isGestureStable]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return {
     gestureState,

@@ -13,7 +13,7 @@ function App() {
   const [isTracking, setIsTracking] = useState(false);
   const [showHelp, setShowHelp] = useState(true);
 
-  const { isReady, error, handData, startTracking, stopTracking } = useHandTracking();
+  const { error, handData, startTracking, stopTracking } = useHandTracking();
   const { gestureState, cursorPosition } = useGestureEngine(handData);
 
   const handleStartStop = async () => {

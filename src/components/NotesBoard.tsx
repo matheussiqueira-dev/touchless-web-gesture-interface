@@ -20,6 +20,44 @@ export const NotesBoard: React.FC<NotesBoardProps> = ({ gestureState, cursorPosi
   const pinchStartTimeRef = useRef<number>(0);
   const lastPinchPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
+  // Helper functions
+  const createNote = React.useCallback((x: number, y: number) => {
+    const newNote: NoteType = {
+      id: Date.now().toString(),
+      content: 'Double click to edit',
+      position: { 
+        x: Math.max(0, Math.min(window.innerWidth - 200, x - 100)),
+        y: Math.max(0, Math.min(window.innerHeight - 150, y - 75))
+      },
+      color: NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)]
+    };
+    setNotes(prev => [...prev, newNote]);
+  }, []);
+
+  const findNoteAtPosition = React.useCallback((x: number, y: number): NoteType | null => {
+    // Check notes in reverse order (top to bottom)
+    for (let i = notes.length - 1; i >= 0; i--) {
+      const note = notes[i];
+      if (x >= note.position.x && x <= note.position.x + 200 &&
+          y >= note.position.y && y <= note.position.y + 150) {
+        return note;
+      }
+    }
+    return null;
+  }, [notes]);
+
+  const updateNoteContent = React.useCallback((id: string, content: string) => {
+    setNotes(prevNotes => 
+      prevNotes.map(note => 
+        note.id === id ? { ...note, content } : note
+      )
+    );
+  }, []);
+
+  const deleteNote = React.useCallback((id: string) => {
+    setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
+  }, []);
+
   // Create new note on quick pinch
   useEffect(() => {
     const screenX = cursorPosition.smoothX * window.innerWidth;
@@ -46,9 +84,10 @@ export const NotesBoard: React.FC<NotesBoardProps> = ({ gestureState, cursorPosi
     }
 
     previousGestureRef.current = gestureState.type;
-  }, [gestureState, cursorPosition, draggedNote]);
+  }, [gestureState, cursorPosition, draggedNote, createNote]);
 
   // Handle note dragging with fist gesture
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (gestureState.type === 'fist' && gestureState.isStable && !draggedNote) {
       // Check if cursor is over any note
@@ -67,7 +106,7 @@ export const NotesBoard: React.FC<NotesBoardProps> = ({ gestureState, cursorPosi
       // Release dragged note
       setDraggedNote(null);
     }
-  }, [gestureState, cursorPosition, draggedNote, notes]);
+  }, [gestureState, cursorPosition, draggedNote, findNoteAtPosition]);
 
   // Update dragged note position
   useEffect(() => {
@@ -90,43 +129,7 @@ export const NotesBoard: React.FC<NotesBoardProps> = ({ gestureState, cursorPosi
       );
     }
   }, [draggedNote, cursorPosition, dragOffset]);
-
-  const createNote = (x: number, y: number) => {
-    const newNote: NoteType = {
-      id: Date.now().toString(),
-      content: 'Double click to edit',
-      position: { 
-        x: Math.max(0, Math.min(window.innerWidth - 200, x - 100)),
-        y: Math.max(0, Math.min(window.innerHeight - 150, y - 75))
-      },
-      color: NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)]
-    };
-    setNotes(prev => [...prev, newNote]);
-  };
-
-  const findNoteAtPosition = (x: number, y: number): NoteType | null => {
-    // Check notes in reverse order (top to bottom)
-    for (let i = notes.length - 1; i >= 0; i--) {
-      const note = notes[i];
-      if (x >= note.position.x && x <= note.position.x + 200 &&
-          y >= note.position.y && y <= note.position.y + 150) {
-        return note;
-      }
-    }
-    return null;
-  };
-
-  const updateNoteContent = (id: string, content: string) => {
-    setNotes(prevNotes => 
-      prevNotes.map(note => 
-        note.id === id ? { ...note, content } : note
-      )
-    );
-  };
-
-  const deleteNote = (id: string) => {
-    setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
-  };
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return (
     <div style={{ 
